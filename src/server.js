@@ -4,6 +4,8 @@ import cors from 'cors';
 
 import { getEnvVar } from './utils/getEnvVar.js';
 
+import { getAllTeas, getTeaById } from './services/teas.js';
+
 const PORT = Number(getEnvVar('PORT', '3000'));
 
 export const startServer = () => {
@@ -23,6 +25,29 @@ export const startServer = () => {
   app.get('/', (req, res) => {
     res.json({
       message: 'Hello world!',
+    });
+  });
+
+  app.get('/api/teas', async (req, res) => {
+    const teas = await getAllTeas();
+
+    res.status(200).json({
+      data: teas,
+    });
+  });
+
+  app.get('/api/teas/:id', async (req, res, next) => {
+    const { id } = req.params;
+    const tea = await getTeaById(id);
+
+    if (!tea) {
+      res.status(404).json({
+        message: 'Tea not found',
+      });
+    }
+
+    res.status(200).json({
+      data: tea,
     });
   });
 
