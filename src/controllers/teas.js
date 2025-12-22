@@ -76,3 +76,19 @@ export const upsertTeaController = async (req, res, next) => {
     data: result.tea,
   });
 };
+
+export const patchTeaController = async (req, res, next) => {
+  const { id } = req.params;
+  const result = await updateTea(id, req.body);
+
+  if (!result) {
+    next(createHttpError(404, `Tea with id ${id} not found!`));
+    return;
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: `Successfully updated tea with id ${id}!`,
+    data: result.tea,
+  });
+};
