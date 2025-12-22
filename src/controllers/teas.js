@@ -1,4 +1,9 @@
-import { getAllTeas, getTeaById, createTea } from '../services/teas.js';
+import {
+  getAllTeas,
+  getTeaById,
+  createTea,
+  deleteTeaById,
+} from '../services/teas.js';
 import createHttpError from 'http-errors';
 
 export const getTeasController = async (req, res, next) => {
@@ -34,4 +39,16 @@ export const createTeaController = async (req, res) => {
     message: 'Successfully created tea!',
     data: tea,
   });
+};
+
+export const deleteTeaByIdController = async (req, res, next) => {
+  const { id } = req.params;
+
+  const tea = await deleteTeaById(id);
+
+  if (!tea) {
+    throw createHttpError(404, `Tea with id ${id} not found!`);
+  }
+
+  res.status(204).send();
 };

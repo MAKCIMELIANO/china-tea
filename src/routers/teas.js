@@ -4,6 +4,7 @@ import {
   getTeasController,
   getTeaByIdController,
   createTeaController,
+  deleteTeaByIdController,
 } from '../controllers/teas.js';
 
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
@@ -15,5 +16,7 @@ router.get('/api/teas', ctrlWrapper(getTeasController));
 router.get('/api/teas/:id', ctrlWrapper(getTeaByIdController));
 
 router.post('/api/teas', ctrlWrapper(createTeaController));
+
+router.delete('/api/teas/:id', ctrlWrapper(deleteTeaByIdController));
 
 export default router;

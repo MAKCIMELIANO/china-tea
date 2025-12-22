@@ -14,3 +14,8 @@ export const createTea = async (data) => {
   const tea = await TeaCollection.create(data);
   return tea;
 };
+
+export const deleteTeaById = async (id) => {
+  const tea = await TeaCollection.findByIdAndDelete(id);
+  return tea;
+};
