@@ -2,9 +2,12 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+
 import { getEnvVar } from './utils/getEnvVar.js';
 
-import { getAllTeas, getTeaById } from './services/teas.js';
+import teasRouter from './routers/teas.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -12,6 +15,7 @@ export const startServer = () => {
   const app = express();
 
   app.use(express.json());
+
   app.use(cors());
 
   app.use(
@@ -28,41 +32,11 @@ export const startServer = () => {
     });
   });
 
-  app.get('/api/teas', async (req, res) => {
-    const teas = await getAllTeas();
+  app.use(teasRouter);
 
-    res.status(200).json({
-      data: teas,
-    });
-  });
+  app.use(notFoundHandler);
 
-  app.get('/api/teas/:id', async (req, res, next) => {
-    const { id } = req.params;
-    const tea = await getTeaById(id);
-
-    if (!tea) {
-      res.status(404).json({
-        message: 'Tea not found',
-      });
-    }
-
-    res.status(200).json({
-      data: tea,
-    });
-  });
-
-  app.use((req, res, next) => {
-    res.status(404).json({
-      message: 'Not found',
-    });
-  });
-
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      message: 'Something went wrong',
-      error: err.message,
-    });
-  });
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -9,3 +9,8 @@ export const getTeaById = async (id) => {
   const tea = await TeaCollection.findById(id);
   return tea;
 };
+
+export const createTea = async (data) => {
+  const tea = await TeaCollection.create(data);
+  return tea;
+};
