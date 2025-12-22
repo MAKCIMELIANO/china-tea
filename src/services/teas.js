@@ -15,7 +15,20 @@ export const createTea = async (data) => {
   return tea;
 };
 
-export const deleteTeaById = async (id) => {
+export const deleteTea = async (id) => {
   const tea = await TeaCollection.findByIdAndDelete(id);
   return tea;
+};
+
+export const updateTea = async (id, data, options) => {
+  const tea = await TeaCollection.findOneAndUpdate({ _id: id }, data, {
+    new: true,
+    includeResultMetadata: true,
+    ...options,
+  });
+  if (!tea || !tea.value) return null;
+  return {
+    tea: tea.value,
+    isNew: Boolean(tea?.lastErrorObject?.upserted),
+  };
 };
