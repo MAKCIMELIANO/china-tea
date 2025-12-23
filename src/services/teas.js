@@ -1,8 +1,22 @@
 import { TeaCollection } from '../db/models/tea.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-export const getAllTeas = async () => {
-  const teas = await TeaCollection.find();
-  return teas;
+export const getAllTeas = async ({ page, perPage }) => {
+  const limit = perPage;
+  const skip = (page - 1) * perPage;
+
+  const teasQuery = TeaCollection.find();
+  const teasCount = await TeaCollection.find()
+    .merge(teasQuery)
+    .countDocuments();
+
+  const teas = await teasQuery.skip(skip).limit(limit).exec();
+
+  const paginationData = calculatePaginationData(teasCount, perPage, page);
+  return {
+    data: teas,
+    ...paginationData,
+  };
 };
 
 export const getTeaById = async (id) => {

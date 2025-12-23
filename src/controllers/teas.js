@@ -6,9 +6,11 @@ import {
   updateTea,
 } from '../services/teas.js';
 import createHttpError from 'http-errors';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 export const getTeasController = async (req, res, next) => {
-  const teas = await getAllTeas();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const teas = await getAllTeas({ page, perPage });
 
   res.json({
     status: 200,
@@ -90,5 +92,19 @@ export const patchTeaController = async (req, res, next) => {
     status: 200,
     message: `Successfully updated tea with id ${id}!`,
     data: result.tea,
+  });
+};
+
+export const getTeasPaginatedController = async (req, res) => {
+  const { page, perPage } = parsePaginationParams(req.query);
+  const teas = await getAllTeas({
+    page,
+    perPage,
+  });
+
+  res.json({
+    status: 200,
+    message: 'Successfully found teas!',
+    data: teas,
   });
 };
