@@ -7,20 +7,25 @@ export const getAllTeas = async ({
   perPage = 10,
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
+  filter = {},
 }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
   const teasQuery = TeaCollection.find();
-  const teasCount = await TeaCollection.find()
-    .merge(teasQuery)
-    .countDocuments();
 
-  const teas = await teasQuery
-    .skip(skip)
-    .limit(limit)
-    .sort({ [sortBy]: sortOrder })
-    .exec();
+  if (filter.category) {
+    teasQuery.where('category').equals(filter.category);
+  }
+
+  const [teasCount, teas] = await Promise.all([
+    TeaCollection.find().merge(teasQuery).countDocuments(),
+    teasQuery
+      .skip(skip)
+      .limit(limit)
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
+  ]);
 
   const paginationData = calculatePaginationData(teasCount, perPage, page);
   return {
