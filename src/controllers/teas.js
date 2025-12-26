@@ -7,10 +7,13 @@ import {
 } from '../services/teas.js';
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
 
 export const getTeasController = async (req, res, next) => {
   const { page, perPage } = parsePaginationParams(req.query);
-  const teas = await getAllTeas({ page, perPage });
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+
+  const teas = await getAllTeas({ page, perPage, sortBy, sortOrder });
 
   res.json({
     status: 200,

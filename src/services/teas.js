@@ -1,7 +1,13 @@
+import { SORT_ORDER } from '../constants/index.js';
 import { TeaCollection } from '../db/models/tea.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-export const getAllTeas = async ({ page, perPage }) => {
+export const getAllTeas = async ({
+  page = 1,
+  perPage = 10,
+  sortOrder = SORT_ORDER.ASC,
+  sortBy = '_id',
+}) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
@@ -10,7 +16,11 @@ export const getAllTeas = async ({ page, perPage }) => {
     .merge(teasQuery)
     .countDocuments();
 
-  const teas = await teasQuery.skip(skip).limit(limit).exec();
+  const teas = await teasQuery
+    .skip(skip)
+    .limit(limit)
+    .sort({ [sortBy]: sortOrder })
+    .exec();
 
   const paginationData = calculatePaginationData(teasCount, perPage, page);
   return {
