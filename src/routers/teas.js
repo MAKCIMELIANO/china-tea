@@ -12,6 +12,7 @@ import {
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 import { validateBody } from '../middlewares/validateBody.js';
+import { authenticate } from '../middlewares/authenticate.js';
 import { teaSchema, updateTeaSchema } from '../validation/teas.js';
 
 import { isValidId } from '../middlewares/isValidId.js';
@@ -24,20 +25,23 @@ router.get('/api/teas/:id', isValidId, ctrlWrapper(getTeaByIdController));
 
 router.post(
   '/api/teas',
+  authenticate,
   validateBody(teaSchema),
   ctrlWrapper(createTeaController),
 );
 
-router.delete('/api/teas/:id', ctrlWrapper(deleteTeaController));
+router.delete('/api/teas/:id', authenticate, ctrlWrapper(deleteTeaController));
 
 router.put(
   '/api/teas/:id',
+  authenticate,
   validateBody(updateTeaSchema),
   ctrlWrapper(upsertTeaController),
 );
 
 router.patch(
   '/api/teas/:id',
+  authenticate,
   validateBody(updateTeaSchema),
   ctrlWrapper(patchTeaController),
 );
