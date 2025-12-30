@@ -1,3 +1,5 @@
+import path from 'path';
+
 export const SORT_ORDER = {
   ASC: 'asc',
   DESC: 'desc',
@@ -5,3 +7,7 @@ export const SORT_ORDER = {
 
 export const FIFTEEN_MINUTES = 15 * 60 * 1000;
 export const ONE_DAY = 24 * 60 * 60 * 1000;
+
+export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');
+
+export const UPLOAD_DIR = path.join(process.cwd(), 'uploads');

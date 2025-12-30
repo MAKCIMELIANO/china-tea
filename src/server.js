@@ -2,6 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import fs from 'node:fs';
 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -10,6 +11,10 @@ import { getEnvVar } from './utils/getEnvVar.js';
 
 import teasRouter from './routers/teas.js';
 import authRouter from './routers/auth.js';
+
+import swaggerUI from 'swagger-ui-express';
+import { SWAGGER_PATH } from './constants/index.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -36,12 +41,21 @@ export const startServer = () => {
     });
   });
 
+  try {
+    const swaggerDoc = JSON.parse(fs.readFileSync(SWAGGER_PATH).toString());
+    app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+  } catch (err) {
+    console.error('Cannot load swagger docs', err);
+  }
+
   app.use(teasRouter);
   app.use('/auth', authRouter);
 
   app.use(notFoundHandler);
 
   app.use(errorHandler);
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

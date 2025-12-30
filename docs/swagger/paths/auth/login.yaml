@@ -1,0 +1,22 @@
+post:
+  tags:
+    - Auth
+  summary: Login admin
+  operationId: loginAdmin
+  description: 'Login admin'
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/loginRequest.yaml'
+  responses:
+    '200':
+      description: 'Successfully logged in'
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/loginResponse.yaml'
+    '401':
+      $ref: '../../components/responses/401.yaml'

@@ -1,0 +1,22 @@
+tags:
+  - Teas
+summary: Create new tea
+operationId: createTea
+description: 'Create new tea'
+security:
+  - cookieAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../../components/schemas/teaInput.yaml'
+responses:
+  '201':
+    description: 'Tea created'
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/teaResponse.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'

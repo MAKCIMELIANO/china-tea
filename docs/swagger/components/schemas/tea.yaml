@@ -1,0 +1,66 @@
+type: object
+required:
+  - _id
+  - teaName
+  - teaStockInGrams
+  - deliveryPricePerGramInDollars
+  - purchasePricePerGramInChinaInDollars
+  - costPricePerGram
+  - salePriceInUkrainePerGramInDollars
+  - createdAt
+  - updatedAt
+properties:
+  _id:
+    description: "Tea's id"
+    type: string
+    example: 65e4decdd286b30065d54af9
+  teaName:
+    description: "Tea's name"
+    type: string
+    example: 'Green Tea'
+  description:
+    description: "Tea's description"
+    type: string
+    example: 'A refreshing green tea'
+  image:
+    description: "Link to tea's image"
+    type: string
+    example: https://example.com/image.png
+  category:
+    description: "Tea's category"
+    type: string
+    example: 'Green'
+  originCountry:
+    description: "Tea's origin country"
+    type: string
+    example: 'China'
+  teaStockInGrams:
+    description: 'Stock in grams'
+    type: number
+    example: 1000
+  deliveryPricePerGramInDollars:
+    description: 'Delivery price per gram in dollars'
+    type: number
+    example: 0.1
+  purchasePricePerGramInChinaInDollars:
+    description: 'Purchase price per gram in China in dollars'
+    type: number
+    example: 0.05
+  costPricePerGram:
+    description: 'Cost price per gram'
+    type: number
+    example: 0.08
+  salePriceInUkrainePerGramInDollars:
+    description: 'Sale price in Ukraine per gram in dollars'
+    type: number
+    example: 0.15
+  createdAt:
+    description: 'Creation date'
+    type: string
+    format: date-time
+    example: '2023-01-01T00:00:00.000Z'
+  updatedAt:
+    description: 'Update date'
+    type: string
+    format: date-time
+    example: '2023-01-01T00:00:00.000Z'

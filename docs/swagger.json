@@ -1,0 +1,853 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "China Tea Admin API",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "description": "API for managing tea inventory and admin authentication. Authentication uses cookies."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Teas",
+      "description": "Operations about tea inventory."
+    },
+    {
+      "name": "Auth",
+      "description": "Admin authentication operations."
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login admin",
+        "operationId": "loginAdmin",
+        "description": "Login admin",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logout admin",
+        "operationId": "logoutAdmin",
+        "description": "Logout admin",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully logged out"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/api/teas": {
+      "get": {
+        "tags": [
+          "Teas"
+        ],
+        "summary": "Get list of teas",
+        "operationId": "getTeas",
+        "description": "Get list of teas with pagination and filters",
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "_id",
+                "teaName",
+                "description",
+                "image",
+                "category",
+                "originCountry",
+                "teaStockInGrams",
+                "deliveryPricePerGramInDollars",
+                "purchasePricePerGramInChinaInDollars",
+                "costPricePerGram",
+                "salePriceInUkrainePerGramInDollars",
+                "createdAt",
+                "updatedAt"
+              ],
+              "default": "_id"
+            },
+            "description": "Field to sort by"
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Sort order"
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by category"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of teas with pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teasListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Teas"
+        ],
+        "summary": "Create new tea",
+        "operationId": "createTea",
+        "description": "Create new tea",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/teaInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tea created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/api/teas/{id}": {
+      "get": {
+        "tags": [
+          "Teas"
+        ],
+        "summary": "Get tea by id",
+        "operationId": "getTeaById",
+        "description": "Get tea by id",
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get tea by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Teas"
+        ],
+        "summary": "Upsert tea",
+        "operationId": "upsertTea",
+        "description": "Upsert tea",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/teaInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tea updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teaResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Tea created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Teas"
+        ],
+        "summary": "Update tea partially",
+        "operationId": "updateTea",
+        "description": "Update tea partially",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/teaUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tea updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Teas"
+        ],
+        "summary": "Delete tea",
+        "operationId": "deleteTea",
+        "description": "Delete tea",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tea deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Tea": {
+        "$ref": "#/components/schemas/tea"
+      },
+      "TeaInput": {
+        "$ref": "#/components/schemas/teaInput"
+      },
+      "TeaUpdate": {
+        "$ref": "#/components/schemas/teaUpdate"
+      },
+      "TeaResponse": {
+        "$ref": "#/components/schemas/teaResponse"
+      },
+      "TeasListResponse": {
+        "$ref": "#/components/schemas/teasListResponse"
+      },
+      "LoginRequest": {
+        "$ref": "#/components/schemas/loginRequest"
+      },
+      "LoginResponse": {
+        "$ref": "#/components/schemas/loginResponse"
+      },
+      "loginRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "admin@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        }
+      },
+      "loginResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully logged in an admin!"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "accessToken"
+            ],
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              }
+            }
+          }
+        }
+      },
+      "tea": {
+        "type": "object",
+        "required": [
+          "_id",
+          "teaName",
+          "teaStockInGrams",
+          "deliveryPricePerGramInDollars",
+          "purchasePricePerGramInChinaInDollars",
+          "costPricePerGram",
+          "salePriceInUkrainePerGramInDollars",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "_id": {
+            "description": "Tea's id",
+            "type": "string",
+            "example": "65e4decdd286b30065d54af9"
+          },
+          "teaName": {
+            "description": "Tea's name",
+            "type": "string",
+            "example": "Green Tea"
+          },
+          "description": {
+            "description": "Tea's description",
+            "type": "string",
+            "example": "A refreshing green tea"
+          },
+          "image": {
+            "description": "Link to tea's image",
+            "type": "string",
+            "example": "https://example.com/image.png"
+          },
+          "category": {
+            "description": "Tea's category",
+            "type": "string",
+            "example": "Green"
+          },
+          "originCountry": {
+            "description": "Tea's origin country",
+            "type": "string",
+            "example": "China"
+          },
+          "teaStockInGrams": {
+            "description": "Stock in grams",
+            "type": "number",
+            "example": 1000
+          },
+          "deliveryPricePerGramInDollars": {
+            "description": "Delivery price per gram in dollars",
+            "type": "number",
+            "example": 0.1
+          },
+          "purchasePricePerGramInChinaInDollars": {
+            "description": "Purchase price per gram in China in dollars",
+            "type": "number",
+            "example": 0.05
+          },
+          "costPricePerGram": {
+            "description": "Cost price per gram",
+            "type": "number",
+            "example": 0.08
+          },
+          "salePriceInUkrainePerGramInDollars": {
+            "description": "Sale price in Ukraine per gram in dollars",
+            "type": "number",
+            "example": 0.15
+          },
+          "createdAt": {
+            "description": "Creation date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "description": "Update date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T00:00:00.000Z"
+          }
+        }
+      },
+      "teasListResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully found teas!"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "data",
+              "page",
+              "perPage",
+              "totalItems",
+              "totalPages",
+              "hasNextPage",
+              "hasPreviousPage"
+            ],
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/tea"
+                }
+              },
+              "page": {
+                "type": "integer",
+                "example": 1
+              },
+              "perPage": {
+                "type": "integer",
+                "example": 10
+              },
+              "totalItems": {
+                "type": "integer",
+                "example": 50
+              },
+              "totalPages": {
+                "type": "integer",
+                "example": 5
+              },
+              "hasNextPage": {
+                "type": "boolean",
+                "example": true
+              },
+              "hasPreviousPage": {
+                "type": "boolean",
+                "example": false
+              }
+            }
+          }
+        }
+      },
+      "teaInput": {
+        "type": "object",
+        "required": [
+          "teaName",
+          "description",
+          "image",
+          "category",
+          "originCountry",
+          "teaStockInGrams",
+          "deliveryPricePerGramInDollars",
+          "purchasePricePerGramInChinaInDollars",
+          "costPricePerGram",
+          "salePriceInUkrainePerGramInDollars"
+        ],
+        "properties": {
+          "teaName": {
+            "description": "Tea's name",
+            "type": "string",
+            "example": "Green Tea"
+          },
+          "description": {
+            "description": "Tea's description",
+            "type": "string",
+            "example": "A refreshing green tea"
+          },
+          "image": {
+            "description": "Link to tea's image",
+            "type": "string",
+            "example": "https://example.com/image.png"
+          },
+          "category": {
+            "description": "Tea's category",
+            "type": "string",
+            "example": "Green"
+          },
+          "originCountry": {
+            "description": "Tea's origin country",
+            "type": "string",
+            "example": "China"
+          },
+          "teaStockInGrams": {
+            "description": "Stock in grams",
+            "type": "number",
+            "example": 1000
+          },
+          "deliveryPricePerGramInDollars": {
+            "description": "Delivery price per gram in dollars",
+            "type": "number",
+            "example": 0.1
+          },
+          "purchasePricePerGramInChinaInDollars": {
+            "description": "Purchase price per gram in China in dollars",
+            "type": "number",
+            "example": 0.05
+          },
+          "costPricePerGram": {
+            "description": "Cost price per gram",
+            "type": "number",
+            "example": 0.08
+          },
+          "salePriceInUkrainePerGramInDollars": {
+            "description": "Sale price in Ukraine per gram in dollars",
+            "type": "number",
+            "example": 0.15
+          }
+        }
+      },
+      "teaResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully found tea with id 123!"
+          },
+          "data": {
+            "$ref": "#/components/schemas/tea"
+          }
+        }
+      },
+      "teaUpdate": {
+        "type": "object",
+        "properties": {
+          "teaName": {
+            "description": "Tea's name",
+            "type": "string",
+            "example": "Green Tea"
+          },
+          "description": {
+            "description": "Tea's description",
+            "type": "string",
+            "example": "A refreshing green tea"
+          },
+          "image": {
+            "description": "Link to tea's image",
+            "type": "string",
+            "example": "https://example.com/image.png"
+          },
+          "category": {
+            "description": "Tea's category",
+            "type": "string",
+            "example": "Green"
+          },
+          "originCountry": {
+            "description": "Tea's origin country",
+            "type": "string",
+            "example": "China"
+          },
+          "teaStockInGrams": {
+            "description": "Stock in grams",
+            "type": "number",
+            "example": 1000
+          },
+          "deliveryPricePerGramInDollars": {
+            "description": "Delivery price per gram in dollars",
+            "type": "number",
+            "example": 0.1
+          },
+          "purchasePricePerGramInChinaInDollars": {
+            "description": "Purchase price per gram in China in dollars",
+            "type": "number",
+            "example": 0.05
+          },
+          "costPricePerGram": {
+            "description": "Cost price per gram",
+            "type": "number",
+            "example": 0.08
+          },
+          "salePriceInUkrainePerGramInDollars": {
+            "description": "Sale price in Ukraine per gram in dollars",
+            "type": "number",
+            "example": 0.15
+          }
+        }
+      }
+    },
+    "responses": {
+      "401": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "NotFoundError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Resource not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "$ref": "#/components/responses/401"
+      },
+      "NotFound": {
+        "$ref": "#/components/responses/404"
+      }
+    },
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "sessionId"
+      }
+    }
+  }
+}

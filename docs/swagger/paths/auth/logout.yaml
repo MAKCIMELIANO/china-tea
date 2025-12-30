@@ -1,0 +1,13 @@
+post:
+  tags:
+    - Auth
+  summary: Logout admin
+  operationId: logoutAdmin
+  description: 'Logout admin'
+  security:
+    - cookieAuth: []
+  responses:
+    '204':
+      description: 'Successfully logged out'
+    '401':
+      $ref: '../../components/responses/401.yaml'

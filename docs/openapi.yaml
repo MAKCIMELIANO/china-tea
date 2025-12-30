@@ -1,0 +1,60 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: China Tea Admin API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: API for managing tea inventory and admin authentication. Authentication uses cookies.
+tags:
+  - name: Teas
+    description: Operations about tea inventory.
+  - name: Auth
+    description: Admin authentication operations.
+servers:
+  - url: http://localhost:3000
+paths:
+  /auth/login:
+    $ref: ./swagger/paths/auth/login.yaml
+  /auth/logout:
+    $ref: ./swagger/paths/auth/logout.yaml
+  /api/teas:
+    get:
+      $ref: ./swagger/paths/teas/get.yaml
+    post:
+      $ref: ./swagger/paths/teas/post.yaml
+  /api/teas/{id}:
+    get:
+      $ref: ./swagger/paths/teas/id/get.yaml
+    put:
+      $ref: ./swagger/paths/teas/id/put.yaml
+    patch:
+      $ref: ./swagger/paths/teas/id/patch.yaml
+    delete:
+      $ref: ./swagger/paths/teas/id/delete.yaml
+components:
+  schemas:
+    Tea:
+      $ref: ./swagger/components/schemas/tea.yaml
+    TeaInput:
+      $ref: ./swagger/components/schemas/teaInput.yaml
+    TeaUpdate:
+      $ref: ./swagger/components/schemas/teaUpdate.yaml
+    TeaResponse:
+      $ref: ./swagger/components/schemas/teaResponse.yaml
+    TeasListResponse:
+      $ref: ./swagger/components/schemas/teasListResponse.yaml
+    LoginRequest:
+      $ref: ./swagger/components/schemas/loginRequest.yaml
+    LoginResponse:
+      $ref: ./swagger/components/schemas/loginResponse.yaml
+  responses:
+    Unauthorized:
+      $ref: ./swagger/components/responses/401.yaml
+    NotFound:
+      $ref: ./swagger/components/responses/404.yaml
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionId

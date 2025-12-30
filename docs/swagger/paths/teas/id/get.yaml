@@ -1,0 +1,24 @@
+tags:
+  - Teas
+summary: Get tea by id
+operationId: getTeaById
+description: 'Get tea by id'
+security: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+responses:
+  '200':
+    description: 'Get tea by id'
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../swagger/components/schemas/teaResponse.yaml'
+  '401':
+    $ref: '../../../../swagger/components/responses/401.yaml'
+  '404':
+    $ref: '../../../../swagger/components/responses/404.yaml'

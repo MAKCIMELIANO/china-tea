@@ -1,0 +1,45 @@
+type: object
+required:
+  - status
+  - message
+  - data
+properties:
+  status:
+    type: integer
+    example: 200
+  message:
+    type: string
+    example: 'Successfully found teas!'
+  data:
+    type: object
+    required:
+      - data
+      - page
+      - perPage
+      - totalItems
+      - totalPages
+      - hasNextPage
+      - hasPreviousPage
+    properties:
+      data:
+        type: array
+        items:
+          $ref: './tea.yaml'
+      page:
+        type: integer
+        example: 1
+      perPage:
+        type: integer
+        example: 10
+      totalItems:
+        type: integer
+        example: 50
+      totalPages:
+        type: integer
+        example: 5
+      hasNextPage:
+        type: boolean
+        example: true
+      hasPreviousPage:
+        type: boolean
+        example: false

@@ -1,0 +1,21 @@
+tags:
+  - Teas
+summary: Delete tea
+operationId: deleteTea
+description: 'Delete tea'
+security:
+  - cookieAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+responses:
+  '204':
+    description: 'Tea deleted'
+  '401':
+    $ref: '../../../../../docs/swagger/components/responses/401.yaml'
+  '404':
+    $ref: '../../../../../docs/swagger/components/responses/404.yaml'
