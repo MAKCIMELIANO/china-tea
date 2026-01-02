@@ -13,6 +13,7 @@ tags:
     description: Admin authentication operations.
 servers:
   - url: http://localhost:3000
+  - url: https://china-tea.onrender.com
 paths:
   /auth/login:
     $ref: ./swagger/paths/auth/login.yaml
